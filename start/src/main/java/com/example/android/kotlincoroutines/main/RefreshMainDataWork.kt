@@ -51,7 +51,7 @@ class RefreshMainDataWork(context: Context, params: WorkerParameters, private va
         }
     }
 
-    class Factory(val network: MainNetwork = getNetworkService()) : WorkerFactory() {
+    class Factory(private val network: MainNetwork = getNetworkService()) : WorkerFactory() {
         override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker? {
             return RefreshMainDataWork(appContext, workerParameters, network)
         }

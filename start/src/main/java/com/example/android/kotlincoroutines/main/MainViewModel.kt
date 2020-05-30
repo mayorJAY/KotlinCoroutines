@@ -20,7 +20,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.kotlincoroutines.util.BACKGROUND
 import com.example.android.kotlincoroutines.util.singleArgViewModelFactory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -40,7 +39,6 @@ class MainViewModel(private val repository: TitleRepository) : ViewModel() {
         /**
          * Factory for creating [MainViewModel]
          *
-         * @param arg the repository to pass to [MainViewModel]
          */
         val FACTORY = singleArgViewModelFactory(::MainViewModel)
     }
@@ -66,7 +64,7 @@ class MainViewModel(private val repository: TitleRepository) : ViewModel() {
      */
     val title = repository.title
 
-    private val _spinner = MutableLiveData<Boolean>(false)
+    private val _spinner = MutableLiveData(false)
 
     /**
      * Show a loading spinner if true
@@ -82,7 +80,7 @@ class MainViewModel(private val repository: TitleRepository) : ViewModel() {
     /**
      * LiveData with formatted tap count.
      */
-    private val _taps = MutableLiveData<String>("$tapCount taps")
+    private val _taps = MutableLiveData("$tapCount taps")
 
     /**
      * Public view of tap live data.
@@ -105,9 +103,13 @@ class MainViewModel(private val repository: TitleRepository) : ViewModel() {
      * Wait one second then update the tap count.
      */
     private fun updateTaps() {
+        // launch a coroutine in viewModelScope
         viewModelScope.launch {
             tapCount++
+            // suspend this coroutine for one second
             delay(1_000)
+            // resume in the main dispatcher
+            // _snackbar.value can be called directly from main thread
             _taps.postValue("$tapCount taps")
         }
     }

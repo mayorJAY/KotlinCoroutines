@@ -37,6 +37,7 @@ class RefreshMainDataWorkTest {
                 .setWorkerFactory(RefreshMainDataWork.Factory(fakeNetwork))
                 .build()
 
+        // Start the work synchronously
         val result = worker.startWork().get()
         assertThat(result).isEqualTo(ListenableWorker.Result.success())
     }
